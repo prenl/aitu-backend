@@ -27,10 +27,6 @@
         <!-- Sweet alerts 2 -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-        <!-- DataTables -->
-        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.18/css/jquery.dataTables.css" />
-        <script src="https://cdn.datatables.net/1.11.18/js/jquery.dataTables.js"></script>
-
         <!-- jQuery -->
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -85,9 +81,7 @@
                     history = data;
                     generateHistoryTable(history);
                 },
-                error: function (xhr, status, error) {
-                    window.location.href = `/error?status=${status}`;
-                },
+                error: function (xhr, status, error) {},
             });
 
             function generateHistoryTable(history) {
