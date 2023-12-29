@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>History - BMI Calculator</title>
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="images/logo.png" />
+
+        <!-- Google Fonts | Roboto Slab + Montserrat -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+
+        <!-- Sweet alerts 2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <!-- DataTables -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.18/css/jquery.dataTables.css" />
+        <script src="https://cdn.datatables.net/1.11.18/js/jquery.dataTables.js"></script>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <style>
+            * {
+                font-family: "Roboto Slab";
+                font-weight: 400;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+    <body class="bg-dark vh-100 d-flex flex-column">
+        <div class="bg-dark">
+            <div class="container">
+                <header class="d-flex flex-wrap justify-content-center py-3">
+                    <a
+                        href="/"
+                        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
+                    >
+                        <span class="fs-4 text-light">BMI Calculator</span>
+                    </a>
+
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Home</a></li>
+                        <li class="nav-item"><a href="/bmicalculator" class="nav-link">Calculate</a></li>
+                        <li class="nav-item"><a href="/history" class="nav-link active">History</a></li>
+                        <li class="nav-item">
+                            <a href="https://github.com/prenl" target="__blank" class="nav-link">Github</a>
+                        </li>
+                    </ul>
+                </header>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="history-table"></div>
+        </div>
+
+        <footer class="bg-dark text-light text-center py-3">2022 - 2025 &copy; Yelnur Abdrakhmanov | SE-2203</footer>
+
+        <script>
+            let history = [];
+
+            $.ajax({
+                type: "GET",
+                url: "http://localhost:3000/data",
+                dataType: "json",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                success: function (data) {
+                    history = data;
+                    generateHistoryTable(history);
+                },
+                error: function (xhr, status, error) {
+                    window.location.href = `/error?status=${status}`;
+                },
+            });
+
+            function generateHistoryTable(history) {
+                const tableDiv = document.getElementById("history-table");
+                const table = document.createElement("table");
+                table.classList.add("display", "table", "table-striped", "table-bordered");
+
+                const thead = document.createElement("thead");
+                const headerRow = document.createElement("tr");
+                const headers = ["Timestamp", "Weight (kg)", "Height (m)", "BMI", "Age", "Gender"];
+
+                headers.forEach((headerText) => {
+                    const th = document.createElement("th");
+                    th.textContent = headerText;
+                    headerRow.appendChild(th);
+                });
+
+                thead.appendChild(headerRow);
+                table.appendChild(thead);
+
+                const tbody = document.createElement("tbody");
+
+                history.forEach((record) => {
+                    const row = document.createElement("tr");
+                    const timestampCell = document.createElement("td");
+                    const weightCell = document.createElement("td");
+                    const heightCell = document.createElement("td");
+                    const bmiCell = document.createElement("td");
+                    const ageCell = document.createElement("td");
+                    const genderCell = document.createElement("td");
+
+                    timestampCell.textContent = record.timestamp;
+                    weightCell.textContent = record.weight;
+                    heightCell.textContent = record.height;
+                    ageCell.textContent = record.age;
+                    genderCell.textContent = record.gender;
+                    bmiCell.textContent = record.bmi.toFixed(2);
+
+                    row.appendChild(timestampCell);
+                    row.appendChild(weightCell);
+                    row.appendChild(heightCell);
+                    row.appendChild(bmiCell);
+                    row.appendChild(ageCell);
+                    row.appendChild(genderCell);
+
+                    tbody.appendChild(row);
+                });
+
+                table.appendChild(tbody);
+                tableDiv.appendChild(table);
+
+                $(table).DataTable();
+            }
+        </script>
+    </body>
+</html>

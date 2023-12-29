@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>BMI Calculator</title>
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="images/logo.png" />
+
+        <!-- Google Fonts | Roboto Slab + Montserrat -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+
+        <!-- Sweet alerts 2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <style>
+            * {
+                font-family: "Roboto Slab";
+                font-weight: 400;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+    <body class="vh-100 d-flex flex-column">
+        <div class="bg-dark">
+            <div class="container">
+                <header class="d-flex flex-wrap justify-content-center py-3">
+                    <a
+                        href="/"
+                        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
+                    >
+                        <span class="fs-4 text-light">BMI Calculator</span>
+                    </a>
+
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Home</a></li>
+                        <li class="nav-item"><a href="/bmicalculator" class="nav-link active">Calculate</a></li>
+                        <li class="nav-item"><a href="/history" class="nav-link">History</a></li>
+                        <li class="nav-item">
+                            <a href="https://github.com/prenl" target="__blank" class="nav-link">Github</a>
+                        </li>
+                    </ul>
+                </header>
+            </div>
+        </div>
+
+        <div style="background-image: url('images/bg.png')" class="vh-100">
+            <div class="container">
+                <div class="fs-1 text-light pt-5">How to calculate your BMI?</div>
+                <div class="fs-4 text-light my-3">
+                    You can easily know your Body Mass Index using the calculator below. The only thing to do is to put
+                    your height and weight inside it and click "Calculate BMI" button.
+                </div>
+                <form action="/bmicalculator" method="post" onsubmit="return validateData();">
+                    <div class="container mt-5 p-0">
+                        <div class="card bg-light rounded-4 p-4">
+                            <div class="mb-3">
+                                <label for="weight_number" class="form-label">Weight:</label>
+                                <div class="input-group">
+                                    <input
+                                        type="number"
+                                        id="weight_number"
+                                        name="weight_number"
+                                        placeholder="78"
+                                        class="form-control rounded-2"
+                                        required
+                                    />
+                                    <select id="weight_type" name="weight_type" class="form-select rounded-2">
+                                        <option value="kg">Kilograms</option>
+                                        <option value="lbs">Pounds</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="height_number" class="form-label">Height:</label>
+                                <div class="input-group">
+                                    <input
+                                        type="number"
+                                        id="height_number"
+                                        name="height_number"
+                                        placeholder="181"
+                                        class="form-control rounded-2"
+                                        required
+                                    />
+                                    <select id="height_type" name="height_type" class="form-select rounded-2">
+                                        <option value="cm">Centimeters</option>
+                                        <option value="f">Feet</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="mb-3 d-flex justify-content-between">
+                                <div class="w-48">
+                                    <label for="age" class="form-label">Age (optional):</label>
+                                    <input
+                                        type="number"
+                                        id="age"
+                                        name="age"
+                                        placeholder="30"
+                                        class="form-control rounded-2"
+                                    />
+                                </div>
+                                <div class="w-48">
+                                    <label for="gender" class="form-label">Gender (optional):</label>
+                                    <select id="gender" name="gender" class="form-select rounded-2">
+                                        <option value="None">None</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary p-3">Calculate BMI</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-light text-center py-3">2022 - 2025 &copy; Yelnur Abdrakhmanov | SE-2203</footer>
+
+        <script>
+            function validateData() {
+                const weight = parseFloat(document.getElementById("weight_number").value);
+                const height = parseFloat(document.getElementById("height_number").value);
+                const age = parseInt(document.getElementById("age").value);
+
+                if (weight === null || height === null || weight <= 0 || height <= 0) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid input",
+                        text: "Please enter valid weight and height values.",
+                    });
+                    return false;
+                }
+
+                if (age !== null && age <= 0) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Invalid input",
+                        text: "Please enter valid age.",
+                    });
+                    return false;
+                }
+
+                return true;
+            }
+        </script>
+    </body>
+</html>
