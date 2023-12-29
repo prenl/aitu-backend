@@ -2,7 +2,9 @@ const express = require("express");
 const fs = require("fs");
 const bodyParser = require("body-parser");
 const path = require("path");
+require("dotenv").config();
 const app = express();
+const port = process.env.PORT || 3000;
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -108,6 +110,6 @@ app.use((req, res) => {
     res.sendFile(__dirname + "/public/error.html");
 });
 
-app.listen(3000, function () {
-    console.log("Server started on port 3000");
+app.listen(port, function () {
+    console.log(`Server started on port ${port}`);
 });
