@@ -54,7 +54,7 @@
                 function createMap(lat, lng) {
                     map = new google.maps.Map(document.getElementById("map"), {
                         center: { lat: lat, lng: lng },
-                        zoom: 8,
+                        zoom: 9,
                     });
 
                     map.addListener("click", (e) => {
@@ -62,7 +62,14 @@
                     });
                 }
 
-                if (navigator.geolocation) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const latParam = parseFloat(urlParams.get("lat"));
+                const lonParam = parseFloat(urlParams.get("long"));
+
+                if (!isNaN(latParam) && !isNaN(lonParam)) {
+                    createMap(latParam, lonParam);
+                    parseModal(latParam, lonParam);
+                } else if (navigator.geolocation) {
                     navigator.geolocation.getCurrentPosition(
                         function (position) {
                             var lat = position.coords.latitude;
@@ -71,11 +78,11 @@
                             createMap(lat, lng);
                         },
                         function () {
-                            createMap(51, 71);
+                            createMap(51.1282205, 71.4306682);
                         }
                     );
                 } else {
-                    createMap(51, 71);
+                    createMap(51.1282205, 71.4306682);
                 }
             }
 
@@ -203,7 +210,6 @@
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Home</a></li>
                         <li class="nav-item"><a href="/map" class="nav-link active">Map</a></li>
-                        <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
                         <li class="nav-item">
                             <a href="https://github.com/prenl" target="__blank" class="nav-link">Github</a>
                         </li>
