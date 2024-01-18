@@ -64,21 +64,14 @@
 
             async function getCitySearch(searchString) {
                 try {
-                    const response = await fetch(
-                        `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
-                            searchString
-                        )}&apiKey=39bf8df9317f48bc822123c7b2419c96`
-                    );
+                    const response = await fetch(`/api/coordinates?search=${encodeURIComponent(searchString)}`);
 
-                    const result = await response.json();
-
-                    if (result.features && result.features.length > 0) {
-                        return { lat: result.features[0].properties.lat, lon: result.features[0].properties.lon };
-                    } else {
-                        throw new Error("No results found");
+                    if (response.status === 404) {
+                        throw new Error("Location was not found!");
                     }
+
+                    return await response.json();
                 } catch (error) {
-                    console.error("error", error);
                     throw error;
                 }
             }
