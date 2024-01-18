@@ -49,14 +49,34 @@
             let map;
 
             function initMap() {
-                map = new google.maps.Map(document.getElementById("map"), {
-                    center: { lat: -34.397, lng: 150.644 },
-                    zoom: 8,
-                });
+                var map;
 
-                map.addListener("click", (e) => {
-                    parseModal(e.latLng.lat(), e.latLng.lng());
-                });
+                function createMap(lat, lng) {
+                    map = new google.maps.Map(document.getElementById("map"), {
+                        center: { lat: lat, lng: lng },
+                        zoom: 8,
+                    });
+
+                    map.addListener("click", (e) => {
+                        parseModal(e.latLng.lat(), e.latLng.lng());
+                    });
+                }
+
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(
+                        function (position) {
+                            var lat = position.coords.latitude;
+                            var lng = position.coords.longitude;
+
+                            createMap(lat, lng);
+                        },
+                        function () {
+                            createMap(51, 71);
+                        }
+                    );
+                } else {
+                    createMap(51, 71);
+                }
             }
 
             function getCityName(latLng) {
@@ -95,12 +115,14 @@
                     return;
                 }
 
+                console.log(weather_data);
+
                 document.getElementById("weather_main_name").innerHTML = weather_data.weather[0].main;
                 document.getElementById("weather_clouds_all").innerHTML = `${weather_data.clouds.all}%`;
                 document.getElementById("weather_main_humidity").innerHTML = `${weather_data.main.humidity}%`;
-                document.getElementById("weather_wind").innerHTML = `${weather_data.wind.speed} m/s ${getDirection(
+                document.getElementById("weather_wind").innerHTML = `${weather_data.wind.speed} m/s | ${getDirection(
                     weather_data.wind.deg
-                )} (${weather_data.wind.gust} m/s)`;
+                )} ${weather_data.wind.gust ? `(${weather_data.wind.gust} m/s)` : ""}`;
                 document.getElementById("weather_sunrise").innerHTML = new Date(weather_data.sys.sunrise * 1000).toLocaleTimeString();
                 document.getElementById("weather_sunset").innerHTML = new Date(weather_data.sys.sunset * 1000).toLocaleTimeString();
 
