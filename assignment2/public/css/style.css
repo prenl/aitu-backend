@@ -12,7 +12,7 @@ body {
 }
 
 .image {
-    width: 300px;
+    width: 460px;
     height: 300px;
 }
 
@@ -85,9 +85,21 @@ input:focus {
     background-color: #b0bec5;
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 780px) {
     .card1 {
         padding-left: 26px;
+    }
+
+    .image {
+        display: none;
+    }
+
+    .row_mobile {
+        width: 50%;
+    }
+
+    .modal-overlay {
+        margin-top: 60px;
     }
 }
 
