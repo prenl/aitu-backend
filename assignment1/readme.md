@@ -5,9 +5,8 @@
 ### Installation
 
 -   Clone the repository `git clone https://github.com/prenl/aitu-backend`
--   Enter the folder `cd aitu-backend`
--   Install dependencies `npm install`
--   Install nodemon package `npm i nodemon -D`
+-   Enter the folder `cd aitu-backend/assignment1`
+-   Install dependencies `npm i`
 -   Create `.env` file and specify `PORT` | Default port is 3000
 -   Run the server `npm run dev`
 
@@ -16,6 +15,7 @@
 -   [body-parser](https://www.npmjs.com/package/body-parser) - node.js middleware
 -   [express](https://www.npmjs.com/package/express) - easy and fast js framework
 -   [dotenv](https://www.npmjs.com/package/dotenv) - dotenv management
+-   [nodemon](https://www.npmjs.com/package/nodemon) - automatically restarts the node application when file changes
 
 ### Other packages
 
