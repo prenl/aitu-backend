@@ -34,6 +34,55 @@
                 font-size: 16px;
             }
         </style>
+
+        <script>
+            function sendCity() {
+                var cityName = document.querySelector('[name="city"]').value;
+
+                if (cityName.length < 3) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops...",
+                        text: "Location name must be at least 3 characters long!",
+                    });
+                    return;
+                }
+
+                getCitySearch(cityName)
+                    .then((data) => {
+                        window.location.href = `/map?lat=${data.lat}&long=${data.lon}`;
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                        Swal.fire({
+                            icon: "error",
+                            title: "Oops...",
+                            text: "Location was not found!",
+                        });
+                    });
+            }
+
+            async function getCitySearch(searchString) {
+                try {
+                    const response = await fetch(
+                        `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(
+                            searchString
+                        )}&apiKey=39bf8df9317f48bc822123c7b2419c96`
+                    );
+
+                    const result = await response.json();
+
+                    if (result.features && result.features.length > 0) {
+                        return { lat: result.features[0].properties.lat, lon: result.features[0].properties.lon };
+                    } else {
+                        throw new Error("No results found");
+                    }
+                } catch (error) {
+                    console.error("error", error);
+                    throw error;
+                }
+            }
+        </script>
     </head>
     <body class="vh-100 d-flex flex-column">
         <div class="bg-dark">
@@ -47,7 +96,6 @@
                     <ul class="nav nav-pills">
                         <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
                         <li class="nav-item"><a href="/map" class="nav-link">Map</a></li>
-                        <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
                         <li class="nav-item">
                             <a href="https://github.com/prenl" target="__blank" class="nav-link">Github</a>
                         </li>
@@ -56,9 +104,17 @@
             </div>
             <div class="px-3 pt-2 border-top mb-3">
                 <div class="container d-flex flex-wrap justify-content-end">
-                    <form class="col-12 col-lg-4 mb-2 mb-lg-0 mx-3" role="search">
-                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" />
-                    </form>
+                    <div class="d-flex">
+                        <input
+                            type="search"
+                            class="search-input form-control"
+                            placeholder="Enter any location..."
+                            aria-label="Search"
+                            name="city"
+                            required
+                        />
+                        <button class="search-button btn btn-primary" onclick="sendCity()">Search</button>
+                    </div>
                 </div>
             </div>
         </div>
