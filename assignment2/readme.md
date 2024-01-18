@@ -15,7 +15,7 @@
 -   [express](https://www.npmjs.com/package/express) - easy and fast js framework
 -   [nodemon](https://www.npmjs.com/package/nodemon) - automatically restarts the node application when file changes (developers dependency)
 
-### Used APIs
+### Used APIs and Libraries
 
 -   [Google Fonts CSS](https://fonts.google.com/) - fonts
 -   [Bootstrap 5 CSS](https://getbootstrap.com/) - css framework
