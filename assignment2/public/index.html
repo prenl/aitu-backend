@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Home - The Weather Channel</title>
+
+        <!-- Favicon -->
+        <link rel="icon" type="image/x-icon" href="images/logo.png" />
+
+        <!-- Google Fonts | Roboto Slab + Montserrat -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Slab:wght@400;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Bootstrap -->
+        <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+            integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+            crossorigin="anonymous"
+        />
+
+        <!-- Sweet alerts 2 -->
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <style>
+            * {
+                font-family: "Roboto Slab";
+                font-weight: 400;
+                font-size: 16px;
+            }
+        </style>
+    </head>
+    <body class="vh-100 d-flex flex-column">
+        <div class="bg-dark">
+            <div class="container">
+                <header class="d-flex flex-wrap justify-content-center py-3">
+                    <a
+                        href="/"
+                        class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-dark text-decoration-none"
+                    >
+                        <img src="/images/logo.png" width="28" height="28" alt="" />
+                        <span class="fs-4 text-light">&nbsp;The Weather Channel</span>
+                    </a>
+
+                    <ul class="nav nav-pills">
+                        <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Home</a></li>
+                        <li class="nav-item"><a href="/map" class="nav-link">Map</a></li>
+                        <li class="nav-item"><a href="/about" class="nav-link">About</a></li>
+                        <li class="nav-item">
+                            <a href="https://github.com/prenl" target="__blank" class="nav-link">Github</a>
+                        </li>
+                    </ul>
+                </header>
+            </div>
+            <div class="px-3 pt-2 border-top mb-3">
+                <div class="container d-flex flex-wrap justify-content-end">
+                    <form class="col-12 col-lg-4 mb-2 mb-lg-0 mx-3" role="search">
+                        <input type="search" class="form-control" placeholder="Search..." aria-label="Search" />
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="vh-100">
+            <div
+                class="bg-image p-5 text-center shadow-1-strong rounded text-white"
+                style="
+                    background-image: url('/images/main_bg.jpg');
+                    background-repeat: no-repeat;
+                    background-size: cover;
+                    height: 100%;
+                "
+            >
+                <div class="container text-start">
+                    <h1 class="mb-3 fs-1 text-center fw-bold">Global Warming on the Earth</h1>
+                    <h2 class="fs-3 fw-bold">What is Global Warming?</h2>
+                    <br />
+                    <div class="fs-5">
+                        Global warming refers to the long-term increase in Earth's average surface temperature due to
+                        human activities, primarily the emission of greenhouse gases like carbon dioxide, methane, and
+                        nitrous oxide. These gases, released predominantly from burning fossil fuels, deforestation, and
+                        industrial processes, trap heat in the atmosphere, creating a 'greenhouse effect'.
+                    </div>
+                    <br />
+                    <h2 class="fs-3 fw-bold">The Impact of Global Warming</h2>
+                    <br />
+                    <ol class="">
+                        <li class="fs-5">
+                            Rising Sea Levels: As global temperatures rise, polar ice melts and seawater expands,
+                            causing sea levels to rise. This poses a significant threat to coastal communities and
+                            ecosystems.
+                        </li>
+                        <br />
+                        <li class="fs-5">
+                            Extreme Weather Events: Global warming contributes to more frequent and severe weather
+                            events such as hurricanes, heatwaves, droughts, and heavy rainfall, impacting agriculture,
+                            water supply, and human health.
+                        </li>
+                        <br />
+                        <li class="fs-5">
+                            Disruption of Ecosystems: Climate change disrupts the natural balance of ecosystems, leading
+                            to biodiversity loss. Species unable to adapt to rapid changes face increased risk of
+                            extinction.
+                        </li>
+                    </ol>
+                    <br />
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-primary p-4 rounded" href="/map">Open World Map</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="bg-dark text-light text-center py-3">2022 - 2025 &copy; Yelnur Abdrakhmanov | SE-2203</footer>
+    </body>
+</html>
