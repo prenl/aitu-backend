@@ -115,8 +115,6 @@
                     return;
                 }
 
-                console.log(weather_data);
-
                 document.getElementById("weather_main_name").innerHTML = weather_data.weather[0].main;
                 document.getElementById("weather_clouds_all").innerHTML = `${weather_data.clouds.all}%`;
                 document.getElementById("weather_main_humidity").innerHTML = `${weather_data.main.humidity}%`;
