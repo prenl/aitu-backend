@@ -5,12 +5,12 @@ const port = 3000;
 const YANDEX_API_KEY = "";
 const WEATHER_API_KEY = "";
 
-app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    res.sendFile(__dirname + '/index.html');
+    res.render('pages/index.ejs', { activePage: "dashboard", user: null });
 });
 
 app.listen(port, () => {

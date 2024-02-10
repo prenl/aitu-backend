@@ -1,0 +1,68 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+    <div class="container">
+      <a class="navbar-brand me-2" href="/">
+        <img
+          src="/images/logo.png"
+          height="48"
+          alt="Cloud logo"
+          loading="lazy"
+          style="margin-top: -1px;"
+        />
+      </a>
+  
+      <button
+        data-mdb-collapse-init
+        class="navbar-toggler"
+        type="button"
+        data-mdb-target="#navbarButtonsExample"
+        aria-controls="navbarButtonsExample"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+  
+      <div class="collapse navbar-collapse" id="navbarButtonsExample">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link <% if (activePage === 'dashboard') { %>active fw-semibold text-primary<% } %>" href="#">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <% if (activePage === 'about') { %>active fw-semibold text-primary<% } %>" href="#">About</a>
+          </li>
+          <% if (user) { %>
+            <li class="nav-item">
+              <a class="nav-link <% if (activePage === 'history') { %>active fw-semibold text-primary<% } %>" href="#">History</a>
+            </li>
+          <% } %>
+        </ul>
+  
+        <div class="d-flex align-items-center">
+          <% if (!user) { %>
+            <button type="button" class="btn btn-link text-decoration-none px-3 me-2">
+              Login
+            </button>
+            <button type="button" class="btn btn-primary me-3">
+              Sign up for free
+            </button>
+          <% } else { %>
+            <span>[ <%= user.name %> ]</span>
+            <button type="button" class="btn btn-link me-3">
+              Logout
+            </button>
+          <% } %>
+          <a
+            class="btn btn-dark px-3"
+            href="https://github.com/prenl/aitu-backend"
+            role="button"
+          ><i class="fab fa-github"></i></a>
+        </div>
+      </div>
+      
+    </div>
+    
+</nav>
+<div class="container">
+    <hr class="m-0 p-0" />
+</div>
+  

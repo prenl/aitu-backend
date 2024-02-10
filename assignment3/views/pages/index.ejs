@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Weather App</title>
+
+    <%- include('../components/head.ejs') %>
+
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+
+        body {
+            background-image: url("/images/sunset.png");
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container">
+        <div class="display-0 text-primary">The best<br />Weather App<br />in 2024</div>
+    </div>
+
+    <hr />
+</body>
+</html>
