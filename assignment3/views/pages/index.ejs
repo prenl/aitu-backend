@@ -15,7 +15,6 @@
         body {
             background-image: url("/images/sunset.png");
             background-size: cover;
-            background-repeat: no-repeat;
         }
     </style>
 </head>
@@ -23,9 +22,36 @@
     <%- include('../components/navbar.ejs') %>
 
     <div class="container">
-        <div class="display-0 text-primary">The best<br />Weather App<br />in 2024</div>
+        <div class="display-0 text-dark">The best<br />Weather App<br />in 2024</div>
+
+        <div class="d-flex justify-content-between align-items-center custom-line-container mb-4">
+            <div class="fs-2 col-4">Try it right now!</div>
+            <div class="flex-grow-1 ms-3"></div>
+        </div>
+        
+        <form action="/search" method="POST">
+            <small class="text-muted fw-semibold">Enter the city name:</small>
+            <div class="d-flex justify-content-between">
+                <div class="form-group col-10">
+                    <input type="text" class="form-control p-3" id="city" name="city" placeholder="Boston" />
+                </div>
+                <button type="submit" class="btn btn-primary col-2">Submit</button>
+            </div>
+        </form>
     </div>
 
-    <hr />
+    <%- include('../components/footer.ejs') %>
+
+    <% if (error) { %>
+        <script>
+            Swal.fire({
+                title: "An error occured!",
+                text: "City was not found.",
+                icon: "error"
+            });
+        </script>
+    <% } %>
+
+    
 </body>
 </html>

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(0, 0, 0, 0.1);">
     <div class="container">
       <a class="navbar-brand me-2" href="/">
         <img
@@ -25,36 +25,46 @@
       <div class="collapse navbar-collapse" id="navbarButtonsExample">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'dashboard') { %>active fw-semibold text-primary<% } %>" href="#">Dashboard</a>
+            <a class="nav-link <% if (activePage === 'home') { %>active fw-semibold text-primary<% } %>" href="/">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'about') { %>active fw-semibold text-primary<% } %>" href="#">About</a>
+            <a class="nav-link <% if (activePage === 'about') { %>active fw-semibold text-primary<% } %>" href="/about">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link <% if (activePage === 'search') { %>active fw-semibold text-primary<% } %>" href="/search">Search</a>
           </li>
           <% if (user) { %>
             <li class="nav-item">
-              <a class="nav-link <% if (activePage === 'history') { %>active fw-semibold text-primary<% } %>" href="#">History</a>
+              <a class="nav-link <% if (activePage === 'history') { %>active fw-semibold text-primary<% } %>" href="/history">History</a>
             </li>
           <% } %>
         </ul>
   
         <div class="d-flex align-items-center">
           <% if (!user) { %>
-            <button type="button" class="btn btn-link text-decoration-none px-3 me-2">
-              Login
-            </button>
-            <button type="button" class="btn btn-primary me-3">
-              Sign up for free
-            </button>
+              <% if (activePage === 'login') { %>
+                <a href="/signup" type="button" class="btn btn-primary me-3">
+                  Sign up for free
+                </a>
+              <% } else { %>
+                <a href="/login" type="button" class="btn btn-muted me-3">
+                  Login
+                </a>
+                <a href="/signup" type="button" class="btn btn-primary me-3">
+                  Sign up for free
+                </a>
+              <% } %>
           <% } else { %>
-            <span>[ <%= user.name %> ]</span>
-            <button type="button" class="btn btn-link me-3">
+            <button class="btn btn-primary"><%= user.username %></button>
+            <a href="/logout" type="button" class="btn btn-link me-3 text-decoration-none">
               Logout
-            </button>
+            </a>
           <% } %>
           <a
             class="btn btn-dark px-3"
             href="https://github.com/prenl/aitu-backend"
             role="button"
+            target="__blank"
           ><i class="fab fa-github"></i></a>
         </div>
       </div>
@@ -62,7 +72,5 @@
     </div>
     
 </nav>
-<div class="container">
-    <hr class="m-0 p-0" />
-</div>
+<hr class="m-0 p-0" />
   
