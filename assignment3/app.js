@@ -37,11 +37,40 @@ app.post("/search", async (req, res) => {
     weatherData.time = getCurrentTimeString();
 
     res.render('pages/search.ejs', { activePage: "search", user: user ? user : null, data: weatherData, city: city, error: null });
+
+    if (user) {
+        const weatherLog = new WeatherLogModel({ user: user, city: city, data: JSON.stringify(weatherData), created_at: new Date()});
+        await weatherLog.save();
+    }
 });
 
 app.get("/search", async (req, res) => {
     const user = await getUserInstance();
     res.render('pages/search.ejs', { activePage: "search", user: user, data: null, error: null, city: null });
+});
+
+// History page
+app.get("/history", async (req, res) => {
+    const user = await getUserInstance();
+    if (!user) {
+        return res.status(303).redirect("/search");
+    }
+
+    const weatherLogs = await WeatherLogModel.find({ user: user._id }).exec();
+    console.log(weatherLogs);
+    res.render('pages/history.ejs', { activePage: "history", user: user, logs: weatherLogs ? weatherLogs : null, error: weatherLogs ? null : "No logs found"});
+});
+
+// Admin page
+app.get("/admin", async (req, res) => {
+    const user = await getUserInstance();
+    if (!user || !user.is_admin) {
+        return res.status(303).redirect("/");
+    }
+
+    const allUsers = await UserModel.find().exec();
+
+    res.render('pages/admin.ejs', { activePage: "admin", user: user, users: allUsers, error: null });
 });
 
 
@@ -111,6 +140,12 @@ app.post("/signup", async (req, res) => {
     await userInstance.save();
 
     localStorage.setItem("username", username);
+    res.status(303).redirect("/");
+});
+
+// Logout logic
+app.get("/logout", async (req, res) => {
+    localStorage.clear();
     res.status(303).redirect("/");
 });
 
