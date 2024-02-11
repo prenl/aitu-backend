@@ -2,10 +2,11 @@
   "name": "assignment3",
   "version": "1.0.0",
   "description": "-   Clone the repository `git clone https://github.com/prenl/aitu-backend`\r -   Enter the folder `cd aitu-backend/assignment2`\r -   Install dependencies `npm i`\r -   Run the server usign dev script `npm run dev`",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "prod": "node app.js"
   },
   "keywords": [],
   "author": "",
@@ -20,5 +21,8 @@
     "express": "^4.18.2",
     "mongoose": "^8.1.1",
     "node-localstorage": "^3.0.5"
+  },
+  "engines": {
+    "node": "21.x"
   }
 }
