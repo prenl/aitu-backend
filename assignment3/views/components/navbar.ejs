@@ -9,23 +9,20 @@
       <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
               <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/">Home</a>
+                  <a class="nav-link <%= activePage === 'home' ? 'active text-primary fw-semibold' : '' %>" href="/">Home</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'about' ? 'active' : '' %>" href="/about">About</a>
+                  <a class="nav-link <%= activePage === 'search' ? 'active text-primary fw-semibold' : '' %>" href="/search">Search</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'search' ? 'active' : '' %>" href="/search">Search</a>
+                  <a class="nav-link <%= activePage === 'news' ? 'active text-primary fw-semibold' : '' %>" href="/news">News</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'news' ? 'active' : '' %>" href="/news">News</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'aircraft' ? 'active' : '' %>" href="/aircraft">Aircrafts</a>
+                  <a class="nav-link <%= activePage === 'aircraft' ? 'active text-primary fw-semibold' : '' %>" href="/aircraft">Aircrafts</a>
               </li>
               <% if (user) { %>
                 <li class="nav-item">
-                    <a class="nav-link <%= activePage === 'history' ? 'active' : '' %>" href="/history">History</a>
+                    <a class="nav-link <%= activePage === 'history' ? 'active text-primary fw-semibold' : '' %>" href="/history">History</a>
                 </li>
               <% } %>
           </ul>
@@ -34,7 +31,7 @@
                 <a href="/login" class="btn btn-primary">Login</a>
                 <a href="/signup" class="btn btn-secondary ml-2">Sign up</a>
               <% } else { %>
-                <button class="btn btn-primary rounded-3"><%= user.username %></button>&nbsp;&nbsp;
+                <a href="<% if (user.is_admin) { '/admin' } else { '' } %>" class="btn btn-primary rounded-3"><%= user.username %></a>&nbsp;&nbsp;
                 <a href="/logout" class="btn btn-secondary">Logout</a>
               <% } %>
           </div>

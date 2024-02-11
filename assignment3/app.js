@@ -53,9 +53,24 @@ app.get("/history", async (req, res) => {
         return res.status(303).redirect("/search");
     }
 
-    const logs = await LogsModel.find({ user: user._id }).exec();
-    res.render('pages/history.ejs', { activePage: "history", user: user, logs: logs, error: "No logs found"});
+    const logs = await LogsModel.find({ user: user._id }).sort({ _id: -1 }).exec();
+    res.render('pages/history.ejs', { activePage: "history", user: user, logs: logs, error: logs ? null : "No logs found"});
 });
+
+app.get("/history/:objectId", async (req, res) => {
+    const objectId = req.params.objectId;
+    const log = await LogsModel.findById(objectId).exec();
+    try {
+        if (!log) {
+            return res.status(404).send("Log not found");
+        }
+        
+        res.json(JSON.parse(log.response_data));
+    } catch (error) {
+        res.status(200).json({ data: log.response_data })
+    }
+});
+
 
 // Admin page
 app.get("/admin", async (req, res) => {
