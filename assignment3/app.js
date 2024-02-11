@@ -5,7 +5,7 @@ const { LocalStorage } = require('node-localstorage');
 const port = 3000;
 
 
-const { UserModel, WeatherLogModel } = require('./database');
+const { UserModel, LogsModel } = require('./database');
 let localStorage = new LocalStorage('./scratch');
 const { getWeatherByCity, getNewsByCity, getAircraftInfo } = require('./api');
 const { getWindDirection, getCurrentTimeString } = require('./utils');
@@ -29,6 +29,7 @@ app.post("/search", async (req, res) => {
     const weatherData = await getWeatherByCity(city);
 
     if (!weatherData) {
+        LogsModel.create({ user: user ? user._id : null, request_type: "weather", request_data: city, status_code: "404", timestamp: new Date(), response_data: null});
         return res.render('pages/search.ejs', { activePage: "home", user: user ? user : null, error: "City not found", city: null, data: null});
     }
 
@@ -37,11 +38,7 @@ app.post("/search", async (req, res) => {
     weatherData.time = getCurrentTimeString();
 
     res.render('pages/search.ejs', { activePage: "search", user: user ? user : null, data: weatherData, city: city, error: null });
-
-    if (user) {
-        const weatherLog = new WeatherLogModel({ user: user, city: city, data: JSON.stringify(weatherData), created_at: new Date()});
-        await weatherLog.save();
-    }
+    LogsModel.create({ user: user ? user._id : null, request_type: "weather", request_data: city, status_code: "200", timestamp: new Date(), response_data: JSON.stringify(weatherData)});
 });
 
 app.get("/search", async (req, res) => {
@@ -56,9 +53,8 @@ app.get("/history", async (req, res) => {
         return res.status(303).redirect("/search");
     }
 
-    const weatherLogs = await WeatherLogModel.find({ user: user._id }).exec();
-    console.log(weatherLogs);
-    res.render('pages/history.ejs', { activePage: "history", user: user, logs: weatherLogs ? weatherLogs : null, error: weatherLogs ? null : "No logs found"});
+    const logs = await LogsModel.find({ user: user._id }).exec();
+    res.render('pages/history.ejs', { activePage: "history", user: user, logs: logs, error: "No logs found"});
 });
 
 // Admin page
@@ -83,6 +79,7 @@ app.get("/news", async (req, res) => {
     }
 
     res.render('pages/news.ejs', { activePage: "news", user: user, data: news, error: null });
+    LogsModel.create({ user: user ? user._id : null, request_type: "news", request_data: null, status_code: "200", timestamp: new Date(), response_data: JSON.stringify(news)});
 });
 
 // Aircraft page
@@ -92,10 +89,12 @@ app.post("/aircraft", async (req, res) => {
     const user = await getUserInstance();
 
     if (!aircraft) {
+        LogsModel.create({ user: user ? user._id : null, request_type: "aircraft", request_data: `${manufacturer} ${model}`, status_code: "404", timestamp: new Date(), response_data: null});
         return res.render('pages/aircraft.ejs', { activePage: "aircraft", user: null, error: "Aircraft was not found :(", data: null, manufacturer: null, model: null });
     }
 
     res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, data: aircraft, error: null, manufacturer: aircraft.manufacturer, model: aircraft.model});
+    LogsModel.create({ user: user ? user._id : null, request_type: "aircraft", request_data: `${manufacturer} ${model}`, status_code: "200", timestamp: new Date(), response_data: JSON.stringify(aircraft)});
 });
 
 app.get("/aircraft", async (req, res) => {
@@ -131,12 +130,14 @@ app.post("/login", async (req, res) => {
     } 
         
     if (userInstance.password !== password) {
+        LogsModel.create({ user: userInstance._id, request_type: "login", request_data: username, status_code: "401", timestamp: new Date(), response_data: "wrong password"});
         res.render('pages/login.ejs', { activePage: "login", error: "Password is incorrect", user: null });
         return;
     }
 
     localStorage.setItem("username", username);
     res.status(303).redirect("/");
+    LogsModel.create({ user: userInstance._id, request_type: "login", request_data: username, status_code: "200", timestamp: new Date(), response_data: "success"});
 });
 
 // Signup page
@@ -171,18 +172,14 @@ app.post("/signup", async (req, res) => {
 
     localStorage.setItem("username", username);
     res.status(303).redirect("/");
+    LogsModel.create({ user: userInstance._id, request_type: "signup", request_data: username, status_code: "200", timestamp: new Date(), response_data: "success"});
 });
 
 // Logout logic
 app.get("/logout", async (req, res) => {
     localStorage.clear();
     res.status(303).redirect("/");
-});
-
-
-// History page
-app.get("/history", async (req, res) => {
-    res.status(303).redirect("/");
+    LogsModel.create({ user: null, request_type: "logout", request_data: null, status_code: "200", timestamp: new Date(), response_data: "success"});
 });
 
 // Listening

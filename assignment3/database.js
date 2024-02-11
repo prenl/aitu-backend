@@ -19,16 +19,18 @@ const User = new Schema({
 const UserModel = mongoose.model('User', User);
 
 // Weather logs model
-const WeatherLog = new Schema({
+const Logs = new Schema({
     user: ObjectId,
-    city: String,
-    created_at: Date,
-    data: String
+    request_type: String,
+    request_data: String,
+    status_code: String,
+    timestamp: Date,
+    response_data: String
 });
 
-const WeatherLogModel = mongoose.model('WeatherLog', WeatherLog);
+const LogsModel = mongoose.model('Logs', Logs);
 
 module.exports = {
     UserModel,
-    WeatherLogModel
+    LogsModel
 };
