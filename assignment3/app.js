@@ -7,7 +7,7 @@ const port = 3000;
 
 const { UserModel, WeatherLogModel } = require('./database');
 let localStorage = new LocalStorage('./scratch');
-const { getWeatherByCity, getNewsByCity } = require('./api');
+const { getWeatherByCity, getNewsByCity, getAircraftInfo } = require('./api');
 const { getWindDirection, getCurrentTimeString } = require('./utils');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -83,6 +83,24 @@ app.get("/news", async (req, res) => {
     }
 
     res.render('pages/news.ejs', { activePage: "news", user: user, data: news, error: null });
+});
+
+// Aircraft page
+app.post("/aircraft", async (req, res) => {
+    const { manufacturer, model } = req.body;
+    const aircraft = await getAircraftInfo(manufacturer, model);
+    const user = await getUserInstance();
+
+    if (!aircraft) {
+        return res.render('pages/aircraft.ejs', { activePage: "aircraft", user: null, error: "Aircraft was not found :(", data: null, manufacturer: null, model: null });
+    }
+
+    res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, data: aircraft, error: null, manufacturer: aircraft.manufacturer, model: aircraft.model});
+});
+
+app.get("/aircraft", async (req, res) => {
+    const user = await getUserInstance();
+    res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, error: null, data: null, manufacturer: null, model: null});
 });
 
 

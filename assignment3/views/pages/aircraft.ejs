@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= manufacturer ? manufacturer + " " + model : "Aircraft Details" %></title>
+    <%- include('../components/head.ejs') %>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+        .detail-item {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container mt-4">
+        <form action="/aircraft" method="POST" class="mb-5">
+            <small class="text-dark fw-semibold fs-5">Search aircraft by manufacturer and model!</small>
+            <div class="form-row">
+                <div class="form-group col-md-5">
+                    <input type="text" class="form-control" id="manufacturer" name="manufacturer" placeholder="Boeing" value="<%= manufacturer ? manufacturer : '' %>" />
+                </div>
+                <div class="form-group col-md-5">
+                    <input type="text" class="form-control" id="model" name="model" placeholder="737" value="<%= model ? model : '' %>" />
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </div>
+            </div>
+        </form>
+
+        <% if (manufacturer && model) { %>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Basic Info</h5>
+                            <p class="card-text"><strong>Manufacturer:</strong> <%= manufacturer %></p>
+                            <p class="card-text"><strong>Model:</strong> <%= model %></p>
+                            <p class="card-text"><strong>Engine Type:</strong> <%= data.engine_type %></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Performance</h5>
+                            <p class="card-text"><strong>Max Speed:</strong> <%= data.max_speed_knots %> knots</p>
+                            <p class="card-text"><strong>Cruise Speed:</strong> <%= data.cruise_speed_knots %> knots</p>
+                            <p class="card-text"><strong>Range:</strong> <%= data.range_nautical_miles %> nautical miles</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">Dimensions & Weight</h5>
+                            <p class="card-text"><strong>Length:</strong> <%= data.length_ft %> ft</p>
+                            <p class="card-text"><strong>Height:</strong> <%= data.height_ft %> ft</p>
+                            <p class="card-text"><strong>Wing Span:</strong> <%= data.wing_span_ft %> ft</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <% } %>
+    </div>
+
+    <% if (error) { %>
+        <script>
+            Swal.fire({
+                title: "An error occurred!",
+                text: "<%= error %>",
+                icon: "error"
+            });
+        </script>
+    <% } %>
+
+    <%- include('../components/footer.ejs') %>
+</body>
+</html>

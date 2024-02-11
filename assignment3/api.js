@@ -1,6 +1,7 @@
 const axios = require('axios');
 const OPENWEATHER_KEY = "75ae233af45a22eadf235214a7ab9d18";
 const NEWSAPI_KEY = "67a14609965043f8a11737304bb37d60";
+const NINJAAPI_KEY = "cvRkvydztNnfIhgxg67S1A==QWedcyKadbq6raQl";
 
 async function getWeatherByCity(city) {
     let response, responseData = null;
@@ -67,6 +68,23 @@ async function getNewsByCity() {
     return answer;
 }
 
+async function getAircraftInfo(manufacturer, model) {
+    let response, responseData = null;
+    try {
+        response = await axios.get(`https://api.api-ninjas.com/v1/aircraft?manufacturer=${manufacturer}&model=${model}`, {
+            headers: {
+                'X-Api-Key': NINJAAPI_KEY
+            }
+        });
+
+        responseData = response?.data;
+    } catch {
+        return null;
+    }
+    
+    return responseData[0];
+}
+
 module.exports = {
-    getWeatherByCity, getNewsByCity
+    getWeatherByCity, getNewsByCity, getAircraftInfo
 };
