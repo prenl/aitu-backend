@@ -7,7 +7,7 @@ const port = 3000;
 
 const { UserModel, WeatherLogModel } = require('./database');
 let localStorage = new LocalStorage('./scratch');
-const { getWeatherByCity } = require('./api');
+const { getWeatherByCity, getNewsByCity } = require('./api');
 const { getWindDirection, getCurrentTimeString } = require('./utils');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -71,6 +71,18 @@ app.get("/admin", async (req, res) => {
     const allUsers = await UserModel.find().exec();
 
     res.render('pages/admin.ejs', { activePage: "admin", user: user, users: allUsers, error: null });
+});
+
+// News page
+app.get("/news", async (req, res) => {
+    const news = await getNewsByCity();
+    const user = await getUserInstance();
+
+    if (!news) {
+        return res.render('pages/news.ejs', { activePage: "news", user: user, error: "Could not fetch news", data: null });
+    }
+
+    res.render('pages/news.ejs', { activePage: "news", user: user, data: news, error: null });
 });
 
 
@@ -160,6 +172,8 @@ app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
 
+
+// Utils
 async function getUserInstance() {
     const username = localStorage.getItem("username");
 

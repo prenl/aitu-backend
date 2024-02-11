@@ -1,5 +1,6 @@
 const axios = require('axios');
 const OPENWEATHER_KEY = "75ae233af45a22eadf235214a7ab9d18";
+const NEWSAPI_KEY = "67a14609965043f8a11737304bb37d60";
 
 async function getWeatherByCity(city) {
     let response, responseData = null;
@@ -38,4 +39,34 @@ async function getWeatherByCity(city) {
     };
 }
 
-exports.getWeatherByCity = getWeatherByCity;
+async function getNewsByCity() {
+    let response, responseData = null;
+
+    try {
+        response = await axios.get(`https://newsapi.org/v2/everything?q=weather&apiKey=${NEWSAPI_KEY}&pageSize=10&page=1`);
+        responseData = response?.data?.articles;
+    } catch {
+        return null;
+    }
+
+    let answer = [];
+
+    responseData.forEach(article => {
+        answer.push({
+            "source": article.source.name,
+            "title": article.title,
+            "description": article.description,
+            "url": article.url,
+            "image": article.urlToImage,
+            "published_at": new Date(article.publishedAt).toLocaleString('en-GB', { 
+                hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short', year: 'numeric', hour12: false
+            })
+        });
+    });
+
+    return answer;
+}
+
+module.exports = {
+    getWeatherByCity, getNewsByCity
+};

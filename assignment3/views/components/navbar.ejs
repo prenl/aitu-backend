@@ -33,6 +33,9 @@
           <li class="nav-item">
             <a class="nav-link <% if (activePage === 'search') { %>active fw-semibold text-primary<% } %>" href="/search">Search</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link <% if (activePage === 'news') { %>active fw-semibold text-primary<% } %>" href="/news">News</a>
+          </li>
           <% if (user) { %>
             <li class="nav-item">
               <a class="nav-link <% if (activePage === 'history') { %>active fw-semibold text-primary<% } %>" href="/history">History</a>

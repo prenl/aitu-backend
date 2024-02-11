@@ -3,11 +3,14 @@
       <div class="container p-4 pb-0">
         <section class="">
           <p class="d-flex justify-content-center align-items-center">
+            <% if (!user) {%>
             <span class="me-3">Register for free</span>
-            <button data-mdb-ripple-init type="button" class="btn btn-outline-light btn-rounded">
-              Sign up!
-            </button>
+            
+              <a href="/signup" data-mdb-ripple-init type="button" class="btn btn-outline-light btn-rounded">
+                Sign up!
+              </a>
           </p>
+          <% } %>
         </section>
       </div>
   
