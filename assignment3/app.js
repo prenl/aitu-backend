@@ -11,6 +11,7 @@ const { getWindDirection, getCurrentTimeString } = require('./utils');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static('public'));
+app.set('trust proxy', true)
 
 // Index page
 app.get('/', async (req, res) => {
