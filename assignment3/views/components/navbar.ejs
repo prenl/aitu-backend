@@ -1,82 +1,43 @@
 <nav class="navbar navbar-expand-lg navbar-light" style="background-color: rgba(0, 0, 0, 0.1);">
-    <div class="container">
-      <a class="navbar-brand me-2" href="/">
-        <img
-          src="/images/logo.png"
-          height="48"
-          alt="Cloud logo"
-          loading="lazy"
-          style="margin-top: -1px;"
-        />
+  <div class="container">
+      <a class="navbar-brand" href="/">
+          <img src="/images/logo.png" height="48" alt="Cloud logo" loading="lazy">
       </a>
-  
-      <button
-        data-mdb-collapse-init
-        class="navbar-toggler"
-        type="button"
-        data-mdb-target="#navbarButtonsExample"
-        aria-controls="navbarButtonsExample"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <i class="fas fa-bars"></i>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
       </button>
-  
-      <div class="collapse navbar-collapse" id="navbarButtonsExample">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'home') { %>active fw-semibold text-primary<% } %>" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'about') { %>active fw-semibold text-primary<% } %>" href="/about">About</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'search') { %>active fw-semibold text-primary<% } %>" href="/search">Search</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'news') { %>active fw-semibold text-primary<% } %>" href="/news">News</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link <% if (activePage === 'aircraft') { %>active fw-semibold text-primary<% } %>" href="/aircraft">Aircrafts</a>
-          </li>
-          <% if (user) { %>
-            <li class="nav-item">
-              <a class="nav-link <% if (activePage === 'history') { %>active fw-semibold text-primary<% } %>" href="/history">History</a>
-            </li>
-          <% } %>
-        </ul>
-  
-        <div class="d-flex align-items-center">
-          <% if (!user) { %>
-              <% if (activePage === 'login') { %>
-                <a href="/signup" type="button" class="btn btn-primary me-3">
-                  Sign up for free
-                </a>
-              <% } else { %>
-                <a href="/login" type="button" class="btn btn-muted me-3">
-                  Login
-                </a>
-                <a href="/signup" type="button" class="btn btn-primary me-3">
-                  Sign up for free
-                </a>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto">
+              <li class="nav-item">
+                  <a class="nav-link <%= activePage === 'home' ? 'active' : '' %>" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link <%= activePage === 'about' ? 'active' : '' %>" href="/about">About</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link <%= activePage === 'search' ? 'active' : '' %>" href="/search">Search</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link <%= activePage === 'news' ? 'active' : '' %>" href="/news">News</a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link <%= activePage === 'aircraft' ? 'active' : '' %>" href="/aircraft">Aircrafts</a>
+              </li>
+              <% if (user) { %>
+              <li class="nav-item">
+                  <a class="nav-link <%= activePage === 'history' ? 'active' : '' %>" href="/history">History</a>
+              </li>
               <% } %>
-          <% } else { %>
-            <button class="btn btn-primary"><%= user.username %></button>
-            <a href="/logout" type="button" class="btn btn-link me-3 text-decoration-none">
-              Logout
-            </a>
-          <% } %>
-          <a
-            class="btn btn-dark px-3"
-            href="https://github.com/prenl/aitu-backend"
-            role="button"
-            target="__blank"
-          ><i class="fab fa-github"></i></a>
-        </div>
+          </ul>
+          <div class="d-flex ms-auto">
+              <% if (!user) { %>
+              <a href="/login" class="btn btn-primary">Login</a>
+              <a href="/signup" class="btn btn-secondary ml-2">Sign up</a>
+              <% } else { %>
+              <span class="navbar-text mr-2">Welcome, <%= user.username %></span>
+              <a href="/logout" class="btn btn-secondary">Logout</a>
+              <% } %>
+          </div>
       </div>
-      
-    </div>
-    
+  </div>
 </nav>
-<hr class="m-0 p-0" />
-  
