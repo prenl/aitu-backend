@@ -30,7 +30,17 @@ const Logs = new Schema({
 
 const LogsModel = mongoose.model('Logs', Logs);
 
+// User ip model
+const UserIp = new Schema({
+    ip: String,
+    user: ObjectId
+});
+
+const UserIpModel = mongoose.model('UserIp', UserIp);
+
+// Exports
 module.exports = {
     UserModel,
-    LogsModel
+    LogsModel,
+    UserIpModel
 };

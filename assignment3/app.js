@@ -1,12 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const { LocalStorage } = require('node-localstorage');
 const port = 3000;
 
 
-const { UserModel, LogsModel } = require('./database');
-let localStorage = new LocalStorage('./scratch');
+const { UserModel, LogsModel, UserIpModel } = require('./database');
 const { getWeatherByCity, getNewsByCity, getAircraftInfo } = require('./api');
 const { getWindDirection, getCurrentTimeString } = require('./utils');
 
@@ -16,14 +14,14 @@ app.use(express.static('public'));
 
 // Index page
 app.get('/', async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     res.render('pages/index.ejs', { activePage: "home", user: user ? user : null, error: null });
 });
 
 // Search page
 app.post("/search", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     const city = req.body.city;
 
     const weatherData = await getWeatherByCity(city);
@@ -42,13 +40,13 @@ app.post("/search", async (req, res) => {
 });
 
 app.get("/search", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     res.render('pages/search.ejs', { activePage: "search", user: user, data: null, error: null, city: null });
 });
 
 // History page
 app.get("/history", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     if (!user) {
         return res.status(303).redirect("/search");
     }
@@ -72,7 +70,7 @@ app.get("/history/:objectId", async (req, res) => {
 });
 
 app.get("/history/:objectId/delete", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     if (!user) {
         return res.status(303).redirect("/search");
     }
@@ -85,7 +83,7 @@ app.get("/history/:objectId/delete", async (req, res) => {
 
 // Admin page
 app.get("/admin", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     if (!user || !user.is_admin) {
         return res.status(303).redirect("/");
@@ -97,7 +95,7 @@ app.get("/admin", async (req, res) => {
 });
 
 app.get("/admin/:userid/delete", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     if (!user || !user.is_admin) {
         return res.status(403).redirect("/");
@@ -110,7 +108,7 @@ app.get("/admin/:userid/delete", async (req, res) => {
 });
 
 app.get("/admin/:userid/makeAdmin", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     if (!user || !user.is_admin) {
         return res.status(403).redirect("/");
@@ -124,7 +122,7 @@ app.get("/admin/:userid/makeAdmin", async (req, res) => {
 
 app.post("/admin/addUser", async (req, res) => {
     const { username, email, password, is_admin } = req.body;
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     if (!user || !user.is_admin) {
         return res.status(403).redirect("/");
@@ -155,7 +153,7 @@ app.post('/admin/updateUser', async (req, res) => {
 // News page
 app.get("/news", async (req, res) => {
     const news = await getNewsByCity();
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     if (!news) {
         return res.render('pages/news.ejs', { activePage: "news", user: user, error: "Could not fetch news", data: null });
@@ -169,7 +167,7 @@ app.get("/news", async (req, res) => {
 app.post("/aircraft", async (req, res) => {
     const { manufacturer, model } = req.body;
     const aircraft = await getAircraftInfo(manufacturer, model);
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
 
     if (!aircraft) {
         LogsModel.create({ user: user ? user._id : null, request_type: "aircraft", request_data: `${manufacturer} ${model}`, status_code: "404", timestamp: new Date(), response_data: null});
@@ -181,14 +179,14 @@ app.post("/aircraft", async (req, res) => {
 });
 
 app.get("/aircraft", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, error: null, data: null, manufacturer: null, model: null});
 });
 
 
 // Login page
 app.get("/login", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     if (user) {
         return res.status(303).redirect("/");
     }
@@ -218,14 +216,14 @@ app.post("/login", async (req, res) => {
         return;
     }
 
-    localStorage.setItem("username", username);
+    await UserIpModel.create({ ip: req.ip, user: userInstance._id });
     res.status(303).redirect("/");
     LogsModel.create({ user: userInstance._id, request_type: "login", request_data: username, status_code: "200", timestamp: new Date(), response_data: "success"});
 });
 
 // Signup page
 app.get("/signup", async (req, res) => {
-    const user = await getUserInstance();
+    const user = await getUserInstance(req.ip);
     if (user) {
         return res.status(303).redirect("/");
     }
@@ -253,14 +251,14 @@ app.post("/signup", async (req, res) => {
     userInstance = new UserModel({ username: username, email: email, password: password });
     await userInstance.save();
 
-    localStorage.setItem("username", username);
+    await UserIpModel.create({ ip: req.ip, user: userInstance._id });
     res.status(303).redirect("/");
     LogsModel.create({ user: userInstance._id, request_type: "signup", request_data: username, status_code: "200", timestamp: new Date(), response_data: "success"});
 });
 
 // Logout logic
 app.get("/logout", async (req, res) => {
-    localStorage.clear();
+    await UserIpModel.findOneAndDelete({ ip: req.ip }).exec();
     res.status(303).redirect("/");
     LogsModel.create({ user: null, request_type: "logout", request_data: null, status_code: "200", timestamp: new Date(), response_data: "success"});
 });
@@ -272,12 +270,14 @@ app.listen(port, "0.0.0.0", () => {
 
 
 // Utils
-async function getUserInstance() {
-    const username = localStorage.getItem("username");
+async function getUserInstance(ip) {
+    console.log(ip);
+    let username = await UserIpModel.findOne({ ip: ip }).exec();
+    username = username ? username.user : null;
 
     let userInstance = null;
     if (username) {
-        userInstance = await UserModel.findOne({ username: username }).exec();
+        userInstance = await UserModel.findOne({ _id: username }).exec();
     }
 
     return userInstance;
