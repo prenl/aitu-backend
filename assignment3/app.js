@@ -272,7 +272,6 @@ app.listen(port, "0.0.0.0", () => {
 
 // Utils
 async function getUserInstance(ip) {
-    console.log(ip);
     let username = await UserIpModel.findOne({ ip: ip }).exec();
     username = username ? username.user : null;
 

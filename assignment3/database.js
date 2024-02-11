@@ -18,7 +18,7 @@ const User = new Schema({
 
 const UserModel = mongoose.model('User', User);
 
-// Weather logs model
+// Logs model
 const Logs = new Schema({
     user: ObjectId,
     request_type: String,
