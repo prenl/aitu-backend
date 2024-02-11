@@ -31,7 +31,10 @@
                     <p><strong>Status Code:</strong> <%= log.status_code %></p>
                     <p><strong>Timestamp:</strong> <%= new Date(log.timestamp).toLocaleString() %></p>
                     <!-- Button to view log details -->
-                    <a href="/history/<%= log._id %>" class="btn btn-primary">View Response JSON</a>
+                    <div class="d-flex">
+                        <a href="/history/<%= log._id %>" class="btn btn-primary">View Response JSON</a>&nbsp;&nbsp;
+                        <a href="/history/<%= log._id %>/delete" class="btn btn-danger">Delete log</a>
+                    </div>
                 </div>
             <% }); %>
         <% } else { %>

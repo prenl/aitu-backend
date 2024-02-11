@@ -71,18 +71,86 @@ app.get("/history/:objectId", async (req, res) => {
     }
 });
 
+app.get("/history/:objectId/delete", async (req, res) => {
+    const user = await getUserInstance();
+    if (!user) {
+        return res.status(303).redirect("/search");
+    }
+
+    const objectId = req.params.objectId;
+
+    await LogsModel.findByIdAndDelete(objectId).exec();
+    res.status(303).redirect("/history");
+});
 
 // Admin page
 app.get("/admin", async (req, res) => {
     const user = await getUserInstance();
+
     if (!user || !user.is_admin) {
         return res.status(303).redirect("/");
     }
 
     const allUsers = await UserModel.find().exec();
 
-    res.render('pages/admin.ejs', { activePage: "admin", user: user, users: allUsers, error: null });
+    res.render('pages/admin.ejs', { activePage: "admin", user: user, users: allUsers });
 });
+
+app.get("/admin/:userid/delete", async (req, res) => {
+    const user = await getUserInstance();
+
+    if (!user || !user.is_admin) {
+        return res.status(403).redirect("/");
+    }
+
+    const userId = req.params.userid;
+
+    await UserModel.findByIdAndDelete(userId).exec();
+    res.status(202).redirect("/admin");
+});
+
+app.get("/admin/:userid/makeAdmin", async (req, res) => {
+    const user = await getUserInstance();
+
+    if (!user || !user.is_admin) {
+        return res.status(403).redirect("/");
+    }
+
+    const userId = req.params.userid;
+
+    await UserModel.findByIdAndUpdate(userId, { is_admin: true }).exec();
+    res.status(202).redirect("/admin");
+});
+
+app.post("/admin/addUser", async (req, res) => {
+    const { username, email, password, is_admin } = req.body;
+    const user = await getUserInstance();
+
+    if (!user || !user.is_admin) {
+        return res.status(403).redirect("/");
+    }
+
+    const userInstance = new UserModel({ username: username, email: email, password: password, is_admin: is_admin === "on" });
+    await userInstance.save();
+
+    res.status(202).redirect("/admin");
+});
+
+app.get("/admin/:username", async (req, res) => {
+    const username = req.params.username;
+    const user = await UserModel.findOne({ username: username }).exec();
+    const history = await LogsModel.find({ user: user._id }).sort({ _id: -1 }).exec();
+
+    res.render('pages/admin_user.ejs', { activePage: "admin", user: user, logs: history, error: history ? null : "No logs found"});
+});
+
+app.post('/admin/updateUser', async (req, res) => {
+    const { userId, username, email, password } = req.body;
+    await UserModel.findByIdAndUpdate(userId, { username, email, password });
+
+    res.redirect('/admin');
+});
+
 
 // News page
 app.get("/news", async (req, res) => {
@@ -209,7 +277,7 @@ async function getUserInstance() {
 
     let userInstance = null;
     if (username) {
-        userInstance = await UserModel.findOne({ username: username}).exec();
+        userInstance = await UserModel.findOne({ username: username }).exec();
     }
 
     return userInstance;

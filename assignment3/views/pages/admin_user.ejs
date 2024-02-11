@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Details - Admin Panel</title>
+    <%- include('../components/head.ejs') %>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+    </style>
+</head>
+<body>
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container mt-4">
+        <a class="text-decoration-none text-dark" href="/admin"><i class="fa-solid fa-arrow-up"></i> back to admin panel</a>
+
+        <br>
+        <br>
+
+        <h2>User Details: <%= user.username %></h2>
+        <div class="card my-3">
+            <div class="card-body">
+                <h5 class="card-title">Profile Information</h5>
+                <p class="card-text"><strong>Username:</strong> <%= user.username %></p>
+                <p class="card-text"><strong>Email:</strong> <%= user.email %></p>
+                <p class="card-text"><strong>Admin:</strong> <%= user.is_admin ? 'Yes' : 'No' %></p>
+            </div>
+        </div>
+
+        <h3>Activity Logs</h3>
+        <% if (logs && logs.length > 0) { %>
+            <div class="list-group">
+                <% logs.forEach(function(log) { %>
+                    <a class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Log ID: <%= log._id %></h5>
+                            <small><%= new Date(log.timestamp).toLocaleString() %></small>
+                        </div>
+                        <p class="mb-1">Request Type: <%= log.request_type %></p>
+                        <p class="mb-1">Status Code: <%= log.status_code %></p>
+                    </a>
+                <% }); %>
+            </div>
+        <% } else { %>
+            <p>No logs found.</p>
+        <% } %>
+    </div>
+
+    <% if (error) { %>
+        <script>
+            Swal.fire({
+                title: "An error occurred!",
+                text: "<%= error %>",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        </script>
+    <% } %>
+
+    <%- include('../components/footer.ejs') %>
+</body>
+</html>

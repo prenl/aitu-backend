@@ -31,7 +31,7 @@
                 <a href="/login" class="btn btn-primary">Login</a>
                 <a href="/signup" class="btn btn-secondary ml-2">Sign up</a>
               <% } else { %>
-                <a href="<% if (user.is_admin) { '/admin' } else { '' } %>" class="btn btn-primary rounded-3"><%= user.username %></a>&nbsp;&nbsp;
+                <a href="<%= user.is_admin ? '/admin' : '' %>" class="btn btn-primary rounded-3"><%= user.username %></a>&nbsp;&nbsp;
                 <a href="/logout" class="btn btn-secondary">Logout</a>
               <% } %>
           </div>
