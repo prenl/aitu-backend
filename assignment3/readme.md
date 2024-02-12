@@ -31,5 +31,5 @@
 
 ## Admin account data
 
--   login: prenl
+-   login: Yelnur
 -   password: elnur2005
