@@ -28,7 +28,7 @@
           </ul>
           <div class="d-flex ms-auto">
               <% if (!user) { %>
-                <a href="/login" class="btn btn-primary">Login</a>
+                <a href="/login" class="btn btn-primary">Login</a> &nbsp;&nbsp;
                 <a href="/signup" class="btn btn-secondary ml-2">Sign up</a>
               <% } else { %>
                 <a href="<%= user.is_admin ? '/admin' : '' %>" class="btn btn-primary rounded-3"><%= user.username %></a>&nbsp;&nbsp;

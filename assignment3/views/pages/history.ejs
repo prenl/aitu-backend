@@ -26,7 +26,7 @@
         <% if (logs.length > 0) { %>
             <% logs.forEach(function(log) { %>
                 <div class="log-entry">
-                    <p><strong>Request Type:</strong> <%= log.request_type %></p>
+                    <p><strong>Request Type:</strong> <%= log.request_type.charAt(0).toUpperCase() + log.request_type.slice(1) %></p>
                     <p><strong>Request Data:</strong> <%= log.request_data %></p>
                     <p><strong>Status Code:</strong> <%= log.status_code %></p>
                     <p><strong>Timestamp:</strong> <%= new Date(log.timestamp).toLocaleString() %></p>
