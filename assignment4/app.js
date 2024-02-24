@@ -248,7 +248,7 @@ app.post("/aircraft", async (req, res) => {
 
 app.get("/aircraft", async (req, res) => {
     const user = await getUserInstance(req);
-    res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, error: null, data: null, manufacturer: null, model: null});
+    res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, error: null, data: null, manufacturer: null, model: null, type: null});
 });
 
 
