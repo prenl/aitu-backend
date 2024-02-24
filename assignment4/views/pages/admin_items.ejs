@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - The Aircraft App</title>
+    <%- include('../components/head.ejs') %>
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+        
+    </style>
+</head>
+<body>
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container">
+        <div class="fs-1 fw-semibold my-3">Admin Panel | Manage Items</div>
+
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addItemModal">
+            Add New Item
+        </button>
+    </div>
+    
+    
+    <!-- Add Item Modal Start -->
+    <div class="modal fade" id="addItemModal" role="dialog" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addItemModalLabel">Add New Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/admin/addItem" method="POST">
+            <div class="modal-body">
+                <!-- Names -->
+                <div class="form-group">
+                <label for="nameEn">Name (EN)</label>
+                <input type="text" class="form-control" id="nameEn" name="names[en]" required>
+                </div>
+                <div class="form-group">
+                <label for="nameRu">Name (RU)</label>
+                <input type="text" class="form-control" id="nameRu" name="names[ru]" required>
+                </div>
+                <div class="form-group">
+                <label for="nameKz">Name (KZ)</label>
+                <input type="text" class="form-control" id="nameKz" name="names[kz]" required>
+                </div>
+                <!-- Descriptions -->
+                <div class="form-group">
+                    <label for="descriptionEn">Description (EN)</label>
+                    <textarea class="form-control" id="descriptionEn" name="descriptions[en]" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="descriptionRu">Description (RU)</label>
+                    <textarea class="form-control" id="descriptionRu" name="descriptions[ru]" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="descriptionKz">Description (KZ)</label>
+                    <textarea class="form-control" id="descriptionKz" name="descriptions[kz]" required></textarea>
+                </div>
+                <!-- Links -->
+                <div class="form-group">
+                    <label for="picture1">Picture URL 1</label>
+                    <input type="text" class="form-control" id="picture1" name="pictures[]" required>
+                </div>
+                <div class="form-group">
+                    <label for="picture2">Picture URL 2</label>
+                    <input type="text" class="form-control" id="picture2" name="pictures[]" required>
+                </div>
+                <div class="form-group">
+                    <label for="picture3">Picture URL 3</label>
+                    <input type="text" class="form-control" id="picture3" name="pictures[]" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Add Item</button>
+            </div>
+            </form>
+        </div>
+        </div>
+    </div>
+    <!-- Add Item Modal End -->
+  
+  
+    <!-- Edit Item Modal Start -->
+    <div class="modal fade" id="editItemModal" tabindex="-1" role="dialog" aria-labelledby="editItemModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editItemModalLabel">Edit Item</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editItemForm" action="/admin/updateItem" method="POST">
+                    <div class="modal-body">
+                        <!-- Hidden ID -->
+                        <input hidden id="editItemId" name="itemId">
+                        <!-- Edit Names -->
+                        <div class="form-group">
+                            <label for="editNameEn">Name (EN)</label>
+                            <input type="text" class="form-control" id="editNameEn" name="names[en]" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editNameRu">Name (RU)</label>
+                            <input type="text" class="form-control" id="editNameRu" name="names[ru]" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editNameKz">Name (KZ)</label>
+                            <input type="text" class="form-control" id="editNameKz" name="names[kz]" required>
+                        </div>
+                        <!-- Edit Descriptions -->
+                        <div class="form-group">
+                            <label for="editDescriptionEn">Description (EN)</label>
+                            <textarea class="form-control" id="editDescriptionEn" name="descriptions[en]" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescriptionRu">Description (RU)</label>
+                            <textarea class="form-control" id="editDescriptionRu" name="descriptions[ru]" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="editDescriptionKz">Description (KZ)</label>
+                            <textarea class="form-control" id="editDescriptionKz" name="descriptions[kz]" required></textarea>
+                        </div>
+                        <!-- Edit Links -->
+                        <div class="form-group">
+                            <label for="editPicture1">Picture URL 1</label>
+                            <input type="text" class="form-control" id="editPicture1" name="pictures[]" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPicture2">Picture URL 2</label>
+                            <input type="text" class="form-control" id="editPicture2" name="pictures[]" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="editPicture3">Picture URL 3</label>
+                            <input type="text" class="form-control" id="editPicture3" name="pictures[]" required>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Edit Item Modal End -->
+
+
+    <div class="container mt-5">
+        <h2>Items List</h2>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Name (EN)</th>
+                        <th scope="col">Name (RU)</th>
+                        <th scope="col">Name (KZ)</th>
+                        <th scope="col">Description (EN)</th>
+                        <th scope="col">Description (RU)</th>
+                        <th scope="col">Description (KZ)</th>
+                        <th scope="col">Image URLs</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% items.forEach(function(item) { %>
+                        <tr>
+                            <td><%= item.names.en %></td>
+                            <td><%= item.names.ru %></td>
+                            <td><%= item.names.kz %></td>
+                            <td><%= item.descriptions.en %></td>
+                            <td><%= item.descriptions.ru %></td>
+                            <td><%= item.descriptions.kz %></td>
+                            <td>
+                                <% item.pictures.forEach(function(picture, index) { %>
+                                    <div><a href="<%= picture %>" target="_blank">Link <%= index + 1 %></a></div>
+                                <% }); %>
+                            </td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" onclick="editItem('<%= item._id %>')">Edit</button>
+                                <form action="/admin/item/<%= item._id %>/delete" method="GET">
+                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+
+
+
+    <%- include('../components/footer.ejs') %>
+    <script>
+        var editModal = document.getElementById('editItemModal');
+        editModal.addEventListener('hidden.bs.modal', function (event) {
+            var backdrops = document.getElementsByClassName('modal-backdrop');
+            for(var i = 0; i < backdrops.length; i++) {
+                document.body.removeChild(backdrops[i]);
+            }
+        });
+
+        function editItem(itemId) {
+            fetch(`/admin/item/${itemId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('editItemId').value = itemId;
+                    document.getElementById('editNameEn').value = data.names.en;
+                    document.getElementById('editNameRu').value = data.names.ru;
+                    document.getElementById('editNameKz').value = data.names.kz;
+                    document.getElementById('editDescriptionEn').value = data.descriptions.en;
+                    document.getElementById('editDescriptionKz').value = data.descriptions.kz;
+                    document.getElementById('editDescriptionRu').value = data.descriptions.ru;
+                    
+                    for (let i = 0; i < data.pictures.length; i++) {
+                        document.getElementById(`editPicture${i + 1}`).value = data.pictures[i];
+                    }
+
+                    var editModal = new bootstrap.Modal(document.getElementById('editItemModal'));
+                    editModal.show();
+                })
+                .catch(error => console.error('Error fetching item data:', error));
+
+            const myModal = new bootstrap.Modal(document.getElementById('editItemModal'));
+            myModal.show();
+        }
+    </script>
+</body>
+</html>

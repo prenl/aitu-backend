@@ -5,41 +5,24 @@ const bcrypt = require('bcrypt');
 const app = express();
 const port = 3000;
 
-const { UserModel, LogsModel } = require('./database');
-const { getWeatherByCity, getNewsByCity, getAircraftInfo } = require('./api');
+const { UserModel, LogsModel, ItemModel } = require('./database');
+const { getNewsByCity, getAircraftInfo, getHelicopterInfo } = require('./api');
 const { getWindDirection, getCurrentTimeString } = require('./utils');
 
 app.use(session({ secret: 'yelnurabdrakhmanov-se2203', resave: false, saveUninitialized: true, cookie: { secure: !true, maxAge: 3600000 }}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static('public'));
 app.set('trust proxy', true)
 
 // Index page
 app.get('/', async (req, res) => {
     const user = await getUserInstance(req);
+    const items = await ItemModel.find().exec();
 
-    res.render('pages/index.ejs', { activePage: "home", user: user ? user : null, error: null });
-});
-
-// Search page
-app.post("/search", async (req, res) => {
-    const user = await getUserInstance(req);
-    const city = req.body.city;
-
-    const weatherData = await getWeatherByCity(city);
-
-    if (!weatherData) {
-        LogsModel.create({ user: user ? user._id : null, request_type: "weather", request_data: city, status_code: "404", timestamp: new Date(), response_data: null});
-        return res.render('pages/search.ejs', { activePage: "home", user: user ? user : null, error: "City not found", city: null, data: null});
-    }
-
-    weatherData.wind_direction = getWindDirection(weatherData.wind_deg);
-    weatherData.description = weatherData.description.charAt(0).toUpperCase() + weatherData.description.slice(1);
-    weatherData.time = getCurrentTimeString();
-
-    res.render('pages/search.ejs', { activePage: "search", user: user ? user : null, data: weatherData, city: city, error: null });
-    LogsModel.create({ user: user ? user._id : null, request_type: "weather", request_data: city, status_code: "200", timestamp: new Date(), response_data: JSON.stringify(weatherData)});
+    res.render('pages/index.ejs', { activePage: "home", user: user ? user : null, error: null, items: items });
 });
 
 app.get("/search", async (req, res) => {
@@ -81,6 +64,13 @@ app.get("/history/:objectId/delete", ensureAuthenticated, async (req, res) => {
     const objectId = req.params.objectId;
 
     await LogsModel.findByIdAndDelete(objectId).exec();
+    res.status(303).redirect("/history");
+});
+
+app.get("/history/delete/all", ensureAuthenticated, async (req, res) => {
+    const user = await getUserInstance(req);
+
+    await LogsModel.deleteMany({ user: user._id }).exec();
     res.status(303).redirect("/history");
 });
 
@@ -137,7 +127,7 @@ app.post("/admin/addUser", ensureAdmin, async (req, res) => {
     res.status(202).redirect("/admin");
 });
 
-app.get("/admin/:username", ensureAdmin, async (req, res) => {
+app.get("/admin/user/:username", ensureAdmin, async (req, res) => {
     const username = req.params.username;
     const s_user = await UserModel.findOne({ username: username }).exec();
     const history = await LogsModel.find({ user: s_user._id }).sort({ _id: -1 }).exec();
@@ -155,6 +145,71 @@ app.post('/admin/updateUser', ensureAdmin, async (req, res) => {
 });
 
 
+// Admin Items
+
+app.get("/admin/items", ensureAdmin, async (req, res) => {
+    const user = await getUserInstance(req);
+    const items = await ItemModel.find().exec();
+
+    res.render('pages/admin_items.ejs', { activePage: "admin", user: user, items: items });
+});
+
+// This route is ONLY for fetching it from frontend, not the FORM submissions
+app.get('/admin/item/:itemId', ensureAdmin, async (req, res) => {
+    const item = await ItemModel.findOne({ _id: req.params.itemId }).exec();
+    return item ? res.json(item) : res.status(404).send("Item not found");
+});
+
+app.post("/admin/addItem", ensureAdmin, async (req, res) => {
+    const { names, descriptions, pictures } = req.body;
+
+    const newItem = new ItemModel({
+        names: {
+            en: names.en,
+            ru: names.ru,
+            kz: names.kz
+        },
+        descriptions: {
+            en: descriptions.en,
+            ru: descriptions.ru,
+            kz: descriptions.kz
+        },
+        pictures: pictures
+    });
+
+    await newItem.save();
+
+    res.status(303).redirect('/admin/items');
+});
+
+app.post("/admin/updateItem", ensureAdmin, async (req, res) => {
+    console.log(req.body);
+    const { itemId, names, descriptions, pictures } = req.body;
+    const updated_at = new Date();
+    
+    await ItemModel.findByIdAndUpdate(itemId, {
+        names: {
+            en: names.en,
+            ru: names.ru,
+            kz: names.kz
+        },
+        descriptions: {
+            en: descriptions.en,
+            ru: descriptions.ru,
+            kz: descriptions.kz
+        },
+        pictures: pictures,
+        updated_at: updated_at
+    }).exec();
+
+    res.status(303).redirect('/admin/items');
+});
+
+app.get("/admin/item/:itemId/delete", ensureAdmin, async (req, res) => {
+    await ItemModel.findByIdAndDelete(req.params.itemId).exec();
+    res.status(303).redirect('/admin/items');
+});
+
 // News page
 app.get("/news", async (req, res) => {
     const news = await getNewsByCity();
@@ -170,8 +225,16 @@ app.get("/news", async (req, res) => {
 
 // Aircraft page
 app.post("/aircraft", async (req, res) => {
-    const { manufacturer, model } = req.body;
-    const aircraft = await getAircraftInfo(manufacturer, model);
+    const { manufacturer, model, type } = req.body;
+    let aircraft = null;
+
+    if (type === 'aircraft') {
+        aircraft = await getAircraftInfo(manufacturer, model);
+    } else {
+        aircraft = await getHelicopterInfo(manufacturer, model);
+    }
+
+
     const user = await getUserInstance(req);
 
     if (!aircraft) {
@@ -179,7 +242,7 @@ app.post("/aircraft", async (req, res) => {
         return res.render('pages/aircraft.ejs', { activePage: "aircraft", user: null, error: "Aircraft was not found :(", data: null, manufacturer: null, model: null });
     }
 
-    res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, data: aircraft, error: null, manufacturer: aircraft.manufacturer, model: aircraft.model});
+    res.render('pages/aircraft.ejs', { activePage: "aircraft", user: user, data: aircraft, error: null, manufacturer: aircraft.manufacturer, model: aircraft.model, type: type});
     LogsModel.create({ user: user ? user._id : null, request_type: "aircraft", request_data: `${manufacturer} ${model}`, status_code: "200", timestamp: new Date(), response_data: JSON.stringify(aircraft)});
 });
 
@@ -297,11 +360,11 @@ async function ensureAuthenticated(req, res, next) {
 }
 
 async function ensureAdmin(req, res, next) {
-    if (req.session.userId) {
-        const user = await UserModel.findById(req.session.userId).exec();
-    }
+    let user = null;
 
-    if (!user) res.status(403).redirect("/");
+    if (req.session.userId) {
+        user = await UserModel.findById(req.session.userId).exec();
+    }
 
     if (user?.is_admin) {
         return next();
@@ -317,7 +380,3 @@ async function alreadyLoggedIn(req, res, next) {
 
     return next();
 }
-
-
-
-    

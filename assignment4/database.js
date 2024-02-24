@@ -30,8 +30,31 @@ const Logs = new Schema({
 
 const LogsModel = mongoose.model('Logs', Logs);
 
+// Item model
+const Item = new Schema({
+    names: {
+        en: { type: String, required: true },
+        ru: { type: String, required: true },
+        kz: { type: String, required: true },
+    },
+    descriptions: {
+        en: { type: String, required: true },
+        ru: { type: String, required: true },
+        kz: { type: String, required: true },
+    },
+    pictures: [{ type: String, required: true }],
+    timestamps: {
+        created_at: { type: Date, required: true, default: Date.now},
+        updated_at: { type: Date, required: true, default: Date.now},
+        deleted_at: { type: Date, required: false, default: null},
+    }
+});
+
+const ItemModel = mongoose.model('Item', Item);
+
 // Exports
 module.exports = {
     UserModel,
-    LogsModel
+    LogsModel,
+    ItemModel
 };

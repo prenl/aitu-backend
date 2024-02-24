@@ -12,13 +12,10 @@
                   <a class="nav-link <%= activePage === 'home' ? 'active text-primary fw-semibold' : '' %>" href="/">Home</a>
               </li>
               <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'search' ? 'active text-primary fw-semibold' : '' %>" href="/search">Search</a>
+                  <a class="nav-link <%= activePage === 'aircraft' ? 'active text-primary fw-semibold' : '' %>" href="/aircraft">Search</a>
               </li>
               <li class="nav-item">
                   <a class="nav-link <%= activePage === 'news' ? 'active text-primary fw-semibold' : '' %>" href="/news">News</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link <%= activePage === 'aircraft' ? 'active text-primary fw-semibold' : '' %>" href="/aircraft">Aircrafts</a>
               </li>
               <% if (user) { %>
                 <li class="nav-item">
@@ -27,11 +24,22 @@
               <% } %>
           </ul>
           <div class="d-flex ms-auto">
+            <select id="language" class="rounded">
+              <option value="en">EN</option>
+              <option value="ru">RU</option>
+              <option value="kz">KZ</option>
+            </select>
+            
+            &nbsp;
               <% if (!user) { %>
                 <a href="/login" class="btn btn-primary">Login</a> &nbsp;&nbsp;
                 <a href="/signup" class="btn btn-secondary ml-2">Sign up</a>
               <% } else { %>
-                <a href="<%= user.is_admin ? '/admin' : '' %>" class="btn btn-primary rounded-3"><%= user.username %></a>&nbsp;&nbsp;
+                <% if (user.is_admin) { %>
+                    <a href="/admin/items" class="btn btn-primary rounded-3">Items</a>&nbsp;&nbsp;
+                    <a href="/admin" class="btn btn-primary rounded-3">Users</a>&nbsp;&nbsp;
+                <% } %>
+                <a href="" class="btn btn-primary rounded-3"><%= user.username %></a>&nbsp;&nbsp;
                 <a href="/logout" class="btn btn-secondary">Logout</a>
               <% } %>
           </div>

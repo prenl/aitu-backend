@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - The Weather App</title>
+    <title>Admin - The Aircraft App</title>
     <%- include('../components/head.ejs') %>
     <style>
         * {
@@ -16,7 +16,7 @@
     <%- include('../components/navbar.ejs') %>
 
     <div class="container">
-        <div class="fs-1 fw-semibold my-3">Admin Panel</div>
+        <div class="fs-1 fw-semibold my-3">Admin Panel | Manage Users</div>
     </div>
 
     <div class="container">
@@ -31,7 +31,7 @@
         <div class="list-group">
             <% users.forEach(function(us) { %>
                 <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                    <a href="/admin/<%= us.username %>" class="text-decoration-none"><%= us.username %></a>
+                    <a href="/admin/user/<%= us.username %>" class="text-decoration-none"><%= us.username %></a>
                     <div>
                         <button class="btn btn-sm btn-outline-secondary editUserBtn"
                                 data-bs-toggle="modal" 

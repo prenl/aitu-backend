@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>History - The Weather App</title>
+    <title>History - The Aircraft App</title>
     <%- include('../components/head.ejs') %>
     <style>
         * {
@@ -22,7 +22,11 @@
     <%- include('../components/navbar.ejs') %>
 
     <div class="container">
+
         <div class="fs-1 mb-3">History</div>
+        <form action="/history/delete/all" method="GET">
+            <button class="mb-4 btn btn-danger">Clear History</button>
+        </form>
         <% if (logs.length > 0) { %>
             <% logs.forEach(function(log) { %>
                 <div class="log-entry">
