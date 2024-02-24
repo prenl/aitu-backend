@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Connection to mongo cloud database
-mongoose.connect('mongodb+srv://prenl:elnur2005@cluster0.yourw5a.mongodb.net/').then(() => console.log('Connected!'));
+mongoose.connect('mongodb+srv://prenl:elnur2005@cluster0.yourw5a.mongodb.net/aitu-backend').then(() => console.log('Connected!'));
 
 const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
@@ -30,17 +30,8 @@ const Logs = new Schema({
 
 const LogsModel = mongoose.model('Logs', Logs);
 
-// User ip model
-const UserIp = new Schema({
-    ip: String,
-    user: ObjectId
-});
-
-const UserIpModel = mongoose.model('UserIp', UserIp);
-
 // Exports
 module.exports = {
     UserModel,
-    LogsModel,
-    UserIpModel
+    LogsModel
 };
