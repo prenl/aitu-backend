@@ -1,11 +1,11 @@
-# Assignment 3 of WEB Technogies 2 (Backend) course
+# Assignment 4 of WEB Technogies 2 (Backend) course
 
 ## Astana IT University | Yelnur Abdrakhmanov | SE-2203
 
 ### Installation
 
 -   Clone the repository `git clone https://github.com/prenl/aitu-backend`
--   Enter the folder `cd aitu-backend/assignment3`
+-   Enter the folder `cd aitu-backend/assignment4`
 -   Install dependencies `npm i`
 -   Run the server usign dev script `npm run dev`
 
@@ -19,7 +19,6 @@
 -   [body-parser](https://www.npmjs.com/package/body-parser) - NodeJS body parsing middleware
 -   [ejs](https://www.npmjs.com/package/ejs) - Embedded JavaScript templates
 -   [mongoose](https://www.npmjs.com/package/mongoose) - Mongoose is a MongoDB object modeling tool that supports Node.js
--   [node-localstorage](https://www.npmjs.com/package/node-localstorage) - A drop-in substitute for the browser native localStorage API that runs on node.js
 
 ## Resources Used
 
@@ -30,8 +29,11 @@
 -   [Popper JS](https://popper.js.org/) - Tooltip & popover positioning engine
 -   [jQuery](https://jquery.com/) - JavaScript library for DOM manipulation and event handling
 -   [Yandex Maps API](https://yandex.kz/maps/) - A comprehensive tool for integrating interactive maps
+-   [Ninja API's](https://api-ninjas.com/api/) - A big collection of api's including aircrafts and helicopters
 
 ## Admin account data
 
 -   login: Yelnur
 -   password: elnur2005
+
+# NOTE: My chosen API's DOES NOT have either Russian or Kazakh localizaions, thus I didn't implement language selection on searching but I did language selection for catalogue on the main page!
