@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - The Weather App</title>
+    <%- include('../components/head.ejs') %>
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+        
+    </style>
+</head>
+<body>
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container">
+        <div class="fs-1 fw-semibold my-3">Admin Panel</div>
+    </div>
+
+    <div class="container">
+        <div class="d-flex justify-content-start mb-3">
+            <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#addUserModal">
+                Add User
+            </button>
+        </div>
+
+        <br>
+
+        <div class="list-group">
+            <% users.forEach(function(us) { %>
+                <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    <a href="/admin/<%= us.username %>" class="text-decoration-none"><%= us.username %></a>
+                    <div>
+                        <button class="btn btn-sm btn-outline-secondary editUserBtn"
+                                data-bs-toggle="modal" 
+                                data-bs-target="#editUserModal"
+                                data-username="<%= us.username %>"
+                                data-email="<%= us.email %>"
+                                data-userid="<%= us._id %>"
+                                data-password="<%= us.password %>">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        
+                        <% if (!us.is_admin) { %>
+                            <a href="/admin/<%= us._id %>/makeAdmin" class="btn btn-sm btn-outline-secondary">
+                                <i class="fa-solid fa-crown"></i>
+                            </a>
+                        <% }  %>
+                        <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete('<%= us._id %>')">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/admin/addUser" method="POST">
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password" name="password" required>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="is_admin" name="is_admin">
+                            <label class="form-check-label" for="is_admin">Admin?</label>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Add User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel" id="modalusername">Edit User: <%= user.username %></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="/admin/updateUser" method="POST">
+                    <div class="modal-body">
+                        <input type="hidden" name="userId" value="<%= user._id %>">
+                        <div class="mb-3">
+                            <label for="username-<%= user._id %>" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="username-<%= user._id %>" name="username" value="<%= user.username %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email-<%= user._id %>" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email-<%= user._id %>" name="email" value="<%= user.email %>" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password-<%= user._id %>" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="password-<%= user._id %>" name="password" value="<%= user.password %>" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Update User</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <script>
+        function confirmDelete(userId) {
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = `/admin/${userId}/delete`;
+                }
+            })
+        }
+
+        document.querySelectorAll('.editUserBtn').forEach(item => {
+            item.addEventListener('click', function(event) {
+                const button = event.currentTarget;
+                const username = button.getAttribute('data-username');
+                const email = button.getAttribute('data-email');
+                const userid = button.getAttribute('data-userid');
+                const password = button.getAttribute('data-password');
+                
+                document.querySelector('#editUserModal input[name="username"]').value = username;
+                document.querySelector('#editUserModal input[name="email"]').value = email;
+                document.querySelector('#editUserModal input[name="userId"]').value = userid;
+                document.querySelector('#editUserModal input[name="password"]').value = password;
+                document.querySelector('#editUserModal h5').innerText = `Edit User: ${username}`;
+            });
+        });
+            
+    </script>
+
+
+
+    <%- include('../components/footer.ejs') %>
+</body>
+</html>

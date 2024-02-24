@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Weather App</title>
+
+    <%- include('../components/head.ejs') %>
+
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+
+        body {
+            background-image: url("/images/sunset.png");
+            background-size: cover;
+        }
+    </style>
+</head>
+<body class="bg-light">
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container">
+        <div class="display-0 text-dark">The best<br />Weather App<br />in 2024</div>
+
+        <div class="d-flex justify-content-between align-items-center custom-line-container mb-4">
+            <div class="fs-2 col-4">Try it right now!</div>
+            <div class="flex-grow-1 ms-3"></div>
+        </div>
+        
+        <form action="/search" method="POST">
+            <small class="text-muted fw-semibold">Enter the city name:</small>
+            <div class="d-flex justify-content-between">
+                <div class="form-group col-md-10 col-8">
+                    <input type="text" class="form-control p-3" id="city" name="city" placeholder="Boston" />
+                </div>
+                <button type="submit" class="btn btn-primary col-md-2 col-4">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <%- include('../components/footer.ejs') %>
+
+    <% if (error) { %>
+        <script>
+            Swal.fire({
+                title: "An error occured!",
+                text: "City was not found.",
+                icon: "error"
+            });
+        </script>
+    <% } %>
+
+    
+</body>
+</html>

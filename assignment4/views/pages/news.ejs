@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Weather App</title>
+
+    <%- include('../components/head.ejs') %>
+
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+
+        body {
+            background-color: azure;
+            background-size: cover;
+        }
+
+        .news-item {
+            margin-bottom: 30px;
+            background-color: #f9f9f9;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .news-item:hover {
+            transform: scale(1.02);
+        }
+
+        .news-item h2 {
+            font-size: 20px;
+            margin: 15px 0;
+        }
+
+        .news-item p {
+            font-size: 16px;
+        }
+
+        .news-item img {
+            width: 100%;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .news-content {
+            padding: 20px;
+        }
+    </style>
+</head>
+
+<body class="bg-light vh-100">
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container">
+        <div class="fs-1 fw-semibold my-3">The Weather News</div>
+
+        <div class="row">
+            <% data.forEach(function(article) { %>
+                <div class="col-md-6 mb-4">
+                    <div class="news-item">
+                        <% if(article.image) { %>
+                            <img src="<%= article.image %>" alt="Article Image" class="img-fluid">
+                        <% } %>
+                        <div class="news-content">
+                            <h2><%= article.title %></h2>
+                            <p><%= article.description %></p>
+                            <a href="<%= article.url %>" class="btn btn-primary" target="_blank">Read more</a>
+                        </div>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+
+
+
+    <%- include('../components/footer.ejs') %>
+
+    <% if (error) { %>
+        <script>
+            Swal.fire({
+                title: "An error occured!",
+                text: "<%= error %>",
+                icon: "error"
+            });
+        </script>
+    <% } %>
+</body>
+</html>

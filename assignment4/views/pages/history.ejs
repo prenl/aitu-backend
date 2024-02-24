@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - The Weather App</title>
+    <%- include('../components/head.ejs') %>
+    <style>
+        * {
+            font-family: "Poppins";
+        }
+
+        .log-entry {
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <%- include('../components/navbar.ejs') %>
+
+    <div class="container">
+        <div class="fs-1 mb-3">History</div>
+        <% if (logs.length > 0) { %>
+            <% logs.forEach(function(log) { %>
+                <div class="log-entry">
+                    <p><strong>Request Type:</strong> <%= log.request_type.charAt(0).toUpperCase() + log.request_type.slice(1) %></p>
+                    <p><strong>Request Data:</strong> <%= log.request_data %></p>
+                    <p><strong>Status Code:</strong> <%= log.status_code %></p>
+                    <p><strong>Timestamp:</strong> <%= new Date(log.timestamp).toLocaleString() %></p>
+                    <!-- Button to view log details -->
+                    <div class="d-flex">
+                        <a href="/history/<%= log._id %>" class="btn btn-primary">View Response JSON</a>&nbsp;&nbsp;
+                        <a href="/history/<%= log._id %>/delete" class="btn btn-danger">Delete log</a>
+                    </div>
+                </div>
+            <% }); %>
+        <% } else { %>
+            <p>No logs found.</p>
+        <% } %>
+    </div>
+    
+
+    <% if (error) { %>
+        <script>
+            Swal.fire({
+                title: "An error occurred!",
+                text: "<%= error %>",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        </script>
+    <% } %>
+
+    <%- include('../components/footer.ejs') %>
+</body>
+</html>

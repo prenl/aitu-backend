@@ -1,0 +1,80 @@
+html {
+    height: 100%;
+}
+
+.display-0 {
+    font-size: 10em;
+    font-weight: 600;
+}
+
+.custom-line-container::after {
+    content: "";
+    display: block;
+    height: 2px;
+    background-color: #000;
+    width: 100%;
+}
+
+.custom-line-container {
+    position: relative;
+}
+
+.custom-line-container .flex-grow-1 {
+    flex-grow: 1;
+}
+
+.custom-line-container > div:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 30%;
+    height: 2px;
+    background-color: #000;
+}
+
+@media screen and (max-width: 1400px) {
+    .display-0 {
+        font-size: 7em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .display-0 {
+        font-size: 3.5em;
+    }
+    
+}
+
+.card1 {
+    background-image: linear-gradient(#2196F3, #81D4FA);
+    padding: 30px 20px 30px 50px;
+    border-top-left-radius: 16px;
+}
+
+.image {
+    width: 300px;
+    height: 300px;
+}
+
+.fa-sun-o {
+    font-size: 22px;
+}
+
+.card2 {
+    background-color: #607D8B;
+    padding: 0px 0px 20px 20px;
+    border-top-right-radius: 16px;
+}
+
+.line {
+    height: 1px;
+    background-color: #B0BEC5;
+}
+
+@media screen and (max-width: 500px) {
+    .card1 {
+        padding-left: 26px;
+    }
+}
