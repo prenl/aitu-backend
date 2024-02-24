@@ -190,7 +190,7 @@ app.get("/aircraft", async (req, res) => {
 
 
 // Login page
-app.get("/login", async (req, res) => {
+app.get("/login", alreadyLoggedIn, async (req, res) => {
     const user = await getUserInstance(req);
     if (user) {
         return res.status(303).redirect("/");
@@ -199,7 +199,7 @@ app.get("/login", async (req, res) => {
     res.render('pages/login.ejs', { activePage: "login", error: null, user: null });
 });
 
-app.post("/login", async (req, res) => {
+app.post("/login", alreadyLoggedIn, async (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
@@ -229,7 +229,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Signup page
-app.get("/signup", async (req, res) => {
+app.get("/signup", alreadyLoggedIn, async (req, res) => {
     const user = await getUserInstance(req);
     if (user) {
         return res.status(303).redirect("/");
@@ -238,7 +238,7 @@ app.get("/signup", async (req, res) => {
     res.render('pages/signup.ejs', { activePage: "signup", error: null, user: null });
 });
 
-app.post("/signup", async (req, res) => {
+app.post("/signup", alreadyLoggedIn, async (req, res) => {
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password;
@@ -308,6 +308,14 @@ async function ensureAdmin(req, res, next) {
     }
 
     res.status(403).redirect("/");
+}
+
+async function alreadyLoggedIn(req, res, next) {
+    if (req.session.userId) {
+        return res.status(303).redirect("/");
+    }
+
+    return next();
 }
 
 
